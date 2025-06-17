@@ -43,108 +43,142 @@ const mockAppeals = [
 ];
 
 // Header Component
-const Header = ({ currentView, setCurrentView }: { currentView: string; setCurrentView: (view: string) => void }) => {
+
+import {  Menu, X } from 'lucide-react';
+
+const Header = ({
+  currentView,
+  setCurrentView,
+}: {
+  currentView: string;
+  setCurrentView: (view: string) => void;
+}) => {
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
-    <header className="bg-white shadow-lg border-b-4 border-blue-500">
+    <header className="bg-white shadow-lg border-b-4 border-blue-500 w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          <div className="flex items-center space-x-4">
-            <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-gray-900 flex items-center">
-                <FileText className="mr-2 h-8 w-8 text-blue-600" />
-                RTI-MIS
-              </h1>
-            </div>
-            <div className="text-sm text-gray-600">
+          {/* Logo + User Info */}
+          <div className="space-y-1">
+            <h1 className="text-2xl font-bold text-gray-900 flex items-center">
+              <FileText className="mr-2 h-8 w-8 text-blue-600" />
+              RTI-MIS
+            </h1>
+            <div className="text-sm text-gray-600 hidden sm:block">
               <p><strong>Public Authority:</strong> Ministry of Information & Broadcasting</p>
               <p><strong>Role:</strong> PIO | <strong>User:</strong> SHRI D. DAM</p>
             </div>
           </div>
-          <nav className="flex space-x-4">
-            <button
-              onClick={() => setCurrentView('dashboard')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
-                currentView === 'dashboard' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <Home className="mr-1 h-4 w-4" />
-              HOME
+
+          {/* Hamburger Button */}
+          <div className="md:hidden">
+            <button onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
-            <button
-              onClick={() => setCurrentView('search')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
-                currentView === 'search' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <Search className="mr-1 h-4 w-4" />
-              SEARCH
-            </button>
-            <button
-              onClick={() => setCurrentView('lodge')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
-                currentView === 'lodge' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <Plus className="mr-1 h-4 w-4" />
-              LODGE REQUEST
-            </button>
+          </div>
+
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-2">
+            <NavButton label="HOME" icon={<Home className="mr-1 h-4 w-4" />} active={currentView === 'dashboard'} onClick={() => setCurrentView('dashboard')} />
+            <NavButton label="SEARCH" icon={<Search className="mr-1 h-4 w-4" />} active={currentView === 'search'} onClick={() => setCurrentView('search')} />
+            <NavButton label="LODGE REQUEST" icon={<Plus className="mr-1 h-4 w-4" />} active={currentView === 'lodge'} onClick={() => setCurrentView('lodge')} />
+
+            {/* Dropdown */}
             <div className="relative group">
-              <button className="px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 flex items-center">
+              <button className="flex items-center px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100">
                 <BarChart3 className="mr-1 h-4 w-4" />
                 REPORTS
               </button>
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                 <div className="py-1">
-                  <button 
-                    onClick={() => setCurrentView('reports-pending')}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                  >
-                    PENDING REQUESTS
-                  </button>
-                  <button 
-                    onClick={() => setCurrentView('reports-age')}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                  >
-                    AGE WISE PENDENCY
-                  </button>
-                  <button 
-                    onClick={() => setCurrentView('reports-designer')}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                  >
-                    DESIGNER REPORT
-                  </button>
-                  <button 
-                    onClick={() => setCurrentView('reports-nil-fee')}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                  >
-                    NIL FEE REGISTRATION
-                  </button>
+                  {[
+                    ['PENDING REQUESTS', 'reports-pending'],
+                    ['AGE WISE PENDENCY', 'reports-age'],
+                    ['DESIGNER REPORT', 'reports-designer'],
+                    ['NIL FEE REGISTRATION', 'reports-nil-fee'],
+                  ].map(([label, view]) => (
+                    <button key={view} onClick={() => setCurrentView(view)} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      {label}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
-            <button
-              onClick={() => setCurrentView('change-password')}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
-                currentView === 'change-password' 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-            >
-              <Settings className="mr-1 h-4 w-4" />
-              UTILITY
-            </button>
+
+            <NavButton label="UTILITY" icon={<Settings className="mr-1 h-4 w-4" />} active={currentView === 'change-password'} onClick={() => setCurrentView('change-password')} />
           </nav>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden space-y-2 pb-4">
+            <MobileNavItem label="HOME" icon={<Home className="mr-1 h-4 w-4" />} onClick={() => setCurrentView('dashboard')} />
+            <MobileNavItem label="SEARCH" icon={<Search className="mr-1 h-4 w-4" />} onClick={() => setCurrentView('search')} />
+            <MobileNavItem label="LODGE REQUEST" icon={<Plus className="mr-1 h-4 w-4" />} onClick={() => setCurrentView('lodge')} />
+            <details className="group">
+              <summary className="flex items-center px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 cursor-pointer">
+                <BarChart3 className="mr-1 h-4 w-4" />
+                REPORTS
+              </summary>
+              <div className="pl-6">
+                {[
+                  ['PENDING REQUESTS', 'reports-pending'],
+                  ['AGE WISE PENDENCY', 'reports-age'],
+                  ['DESIGNER REPORT', 'reports-designer'],
+                  ['NIL FEE REGISTRATION', 'reports-nil-fee'],
+                ].map(([label, view]) => (
+                  <button key={view} onClick={() => setCurrentView(view)} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </details>
+            <MobileNavItem label="UTILITY" icon={<Settings className="mr-1 h-4 w-4" />} onClick={() => setCurrentView('change-password')} />
+          </div>
+        )}
       </div>
     </header>
   );
 };
+
+const NavButton = ({
+  label,
+  icon,
+  active,
+  onClick,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  active: boolean;
+  onClick: () => void;
+}) => (
+  <button
+    onClick={onClick}
+    className={`px-4 py-2 rounded-md text-sm font-medium flex items-center transition-colors ${
+      active ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-gray-100'
+    }`}
+  >
+    {icon}
+    {label}
+  </button>
+);
+
+const MobileNavItem = ({
+  label,
+  icon,
+  onClick,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  onClick: () => void;
+}) => (
+  <button onClick={onClick} className="flex items-center px-4 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 w-full text-left">
+    {icon}
+    {label}
+  </button>
+);
+
 
 // Dashboard Component
 const Dashboard = ({ setCurrentView, setSelectedData }: { setCurrentView: (view: string) => void; setSelectedData: (data: any) => void }) => {
