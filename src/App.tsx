@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, Search, Plus, BarChart3, Settings, Home, Users, Clock, AlertCircle, CheckCircle, DollarSign, MessageSquare, FileCheck } from 'lucide-react';
+import { FileText, Search, Plus, BarChart3, Settings, Home,  Clock, AlertCircle, CheckCircle, DollarSign, MessageSquare, FileCheck } from 'lucide-react';
 
 // Mock data for demonstration
 const mockData = {
@@ -106,7 +106,7 @@ const Header = ({
               </div>
             </div>
 
-            <NavButton label="UTILITY" icon={<Settings className="mr-1 h-4 w-4" />} active={currentView === 'change-password'} onClick={() => setCurrentView('change-password')} />
+            <NavButton label="Login" icon={<Settings className="mr-1 h-4 w-4" />} active={currentView === 'change-password'} onClick={() => setCurrentView('change-password')} />
           </nav>
         </div>
 
@@ -134,7 +134,7 @@ const Header = ({
                 ))}
               </div>
             </details>
-            <MobileNavItem label="UTILITY" icon={<Settings className="mr-1 h-4 w-4" />} onClick={() => setCurrentView('change-password')} />
+            <MobileNavItem label="Login" icon={<Settings className="mr-1 h-4 w-4" />} onClick={() => setCurrentView('change-password')} />
           </div>
         )}
       </div>
@@ -834,7 +834,7 @@ const LodgeRequest = ({ setCurrentView }: { setCurrentView: (view: string) => vo
             />
           </div>
 
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-end space-x-4"> 
             <button
               type="button"
               onClick={() => setCurrentView('dashboard')}
@@ -850,6 +850,52 @@ const LodgeRequest = ({ setCurrentView }: { setCurrentView: (view: string) => vo
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  );
+};
+const PasswordRequest = ({ setCurrentView }: { setCurrentView: (view: string) => void }) => {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
+        <h2 className="text-3xl font-bold text-center mb-6">Login</h2>
+
+        <form>
+          <div className="mb-4">
+            <label className="block text-gray-600 text-sm mb-1">Email</label>
+            <input
+              type="email"
+              className="w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 transition p-1"
+              placeholder="Email"
+            />
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-gray-600 text-sm mb-1">Password</label>
+            <input
+              type="password"
+              className="w-full border-b-2 border-gray-300 focus:outline-none focus:border-blue-500 transition p-1"
+              placeholder="Password"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-2 text-white font-semibold rounded bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 transition"
+          >
+            Login
+          </button>
+        </form>
+
+        <div className="text-center mt-6 text-sm text-gray-700">
+          <p>
+            Forgot <a href="#" className="text-blue-700 font-medium">Password?</a>
+          </p>
+          <p className="mt-2">
+            Don't have an account?{' '}
+            <a href="#" className="text-blue-700 font-medium">Sign up</a>
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -873,6 +919,8 @@ function App() {
         return <SearchComponent setCurrentView={setCurrentView} />;
       case 'lodge':
         return <LodgeRequest setCurrentView={setCurrentView} />;
+      case 'change-password':
+        return <PasswordRequest setCurrentView={setCurrentView} />;
       default:
         return <Dashboard setCurrentView={setCurrentView} setSelectedData={setSelectedData} />;
     }
