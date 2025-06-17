@@ -65,7 +65,7 @@ const Header = ({
               <FileText className="mr-2 h-8 w-8 text-blue-600" />
               RTI-MIS
             </h1>
-            <div className="text-sm text-gray-600 hidden sm:block">
+            <div className="text-sm text-gray-600 ">
               <p><strong>Public Authority:</strong> Ministry of Information & Broadcasting</p>
               <p><strong>Role:</strong> PIO | <strong>User:</strong> SHRI D. DAM</p>
             </div>
