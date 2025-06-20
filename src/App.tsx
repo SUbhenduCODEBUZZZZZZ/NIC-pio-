@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { FileText, Search, Plus, BarChart3, Settings, Home,  Clock, AlertCircle, CheckCircle, DollarSign, MessageSquare, FileCheck } from 'lucide-react';
+import { FileText, Search, Plus, BarChart3, Settings,   Clock, AlertCircle, CheckCircle, DollarSign, MessageSquare, FileCheck } from 'lucide-react';
+import TopBar from '/workspaces/NIC-pio-/src/heeeader';
 
+import { Home } from 'lucide-react';
+import AssessmentPage from '/workspaces/NIC-pio-/src/AssassmentPage';
 // Mock data for demonstration
 const mockData = {
   pendingDisposal: {
@@ -56,8 +59,11 @@ const Header = ({
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
+    
     <header className="bg-white shadow-lg border-b-4 border-blue-500 w-full">
+      <TopBar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
         <div className="flex justify-between items-center py-4">
           {/* Logo + User Info */}
           <div className="space-y-1">
@@ -727,62 +733,219 @@ const AssessmentForm = ({ assessmentData, setCurrentView }: { assessmentData: an
 };
 
 // Search Component
-const SearchComponent = ({ setCurrentView }: { setCurrentView: (view: string) => void }) => {
+
+import { Calendar, Filter, ArrowLeft } from 'lucide-react';
+
+interface SearchComponentProps {
+  setCurrentView: (view: string) => void;
+}
+
+const SearchComponent: React.FC<SearchComponentProps> = ({ setCurrentView }) => {
   const [searchType, setSearchType] = useState('registration');
   const [searchValue, setSearchValue] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+
+  const getPlaceholder = () => {
+    switch (searchType) {
+      case 'registration':
+        return 'Enter registration number...';
+      case 'name':
+        return 'Enter applicant name...';
+      case 'date':
+        return 'Select date range below...';
+      case 'status':
+        return 'Select status below...';
+      default:
+        return 'Enter search value...';
+    }
+  };
+
+  const handleSearch = async () => {
+    setIsSearching(true);
+    
+    // Simulate loading
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    setIsSearching(false);
+
+    // 👉 Redirect to HTML page or another view
+    // Option 1: SPA-style routing (preferred if inside React app)
+    // setCurrentView('assessment'); // ← Uncomment if using view state
+
+    // Option 2: Full-page redirect to static file
+    window.location.href = '/file.html'; // ← adjust path if needed
+  };
+
+  const clearSearch = () => {
+    setSearchValue('');
+    setStartDate('');
+    setEndDate('');
+    setSelectedStatus('');
+  };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Search RTI Requests</h2>
-          <button
-            onClick={() => setCurrentView('dashboard')}
-            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
-          >
-            Back to Dashboard
-          </button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+            <Search className="w-8 h-8 text-blue-600" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">RTI Request Search</h1>
+          <p className="text-gray-600">Search and track your RTI application status</p>
         </div>
 
-        <div className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Search By
-            </label>
-            <select 
-              value={searchType}
-              onChange={(e) => setSearchType(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
+        {/* Search Form */}
+        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Search RTI Requests</h2>
+            <button
+              onClick={() => setCurrentView('dashboard')}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
             >
-              <option value="registration">Registration Number</option>
-              <option value="name">Applicant Name</option>
-              <option value="date">Date Range</option>
-              <option value="status">Status</option>
-            </select>
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </button>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Search Value
-            </label>
-            <input 
-              type="text"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2"
-              placeholder={`Enter ${searchType}...`}
-            />
-          </div>
+          <div className="space-y-6">
+            {/* Search Type Selector */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <Filter className="w-4 h-4 inline mr-2" />
+                  Search By
+                </label>
+                <select
+                  value={searchType}
+                  onChange={(e) => setSearchType(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white transition"
+                >
+                  <option value="registration">Registration Number</option>
+                  <option value="name">Applicant Name</option>
+                  <option value="date">Date Range</option>
+                  <option value="status">Status</option>
+                </select>
+              </div>
 
-          <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center">
-            <Search className="mr-2 h-5 w-5" />
-            Search
-          </button>
+              {/* Search Value */}
+              {(searchType === 'registration' || searchType === 'name') && (
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Search Value
+                  </label>
+                  <input
+                    type="text"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    placeholder={getPlaceholder()}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Date Inputs */}
+            {searchType === 'date' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <Calendar className="w-4 h-4 inline mr-2" />
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    End Date
+                  </label>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 transition"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Status Filter */}
+            {searchType === 'status' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Application Status
+                  </label>
+                  <select
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white transition"
+                  >
+                    <option value="">Select Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <button
+                onClick={handleSearch}
+                disabled={isSearching}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2 shadow"
+              >
+                {isSearching ? (
+                  <>
+                    <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                    Searching...
+                  </>
+                ) : (
+                  <>
+                    <button className="w-4 h-4" onClick={AssessmentPage} />
+                    Search RTI Requests
+                  </>
+                )}
+              </button>
+              <button
+                onClick={clearSearch}
+                className="flex-1 sm:flex-none bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2"
+              >
+                <X className="w-4 h-4" />
+                Clear
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Help Section */}
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-blue-900 mb-2">Search Tips</h3>
+          <ul className="text-sm text-blue-700 space-y-1">
+            <li>• Use registration numbers for exact matches</li>
+            <li>• Search by applicant name for partial matches</li>
+            <li>• Use date range to find applications within specific periods</li>
+            <li>• Filter by status to see applications in different stages</li>
+          </ul>
         </div>
       </div>
     </div>
   );
 };
+
+
+
 
 // Lodge Request Component
 const LodgeRequest = ({ setCurrentView }: { setCurrentView: (view: string) => void }) => {
@@ -921,6 +1084,8 @@ function App() {
         return <LodgeRequest setCurrentView={setCurrentView} />;
       case 'change-password':
         return <PasswordRequest setCurrentView={setCurrentView} />;
+        case 'file':
+        return <iframe src="/file.html" className="w-full h-screen border-none" />;
       default:
         return <Dashboard setCurrentView={setCurrentView} setSelectedData={setSelectedData} />;
     }

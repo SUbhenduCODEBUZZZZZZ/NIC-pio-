@@ -20,5 +20,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "src/Components/ScrollToTopButton.jsx", "src/Components/HelpdeskSupportButton.jsx", "src/Components/Header.jsx", "src/Components/Footer.jsx", "src/Components/BottomBar.jsx", "src/Components/BannerSlider.jsx", "src/Components/ActionCard.jsx"]
 }
